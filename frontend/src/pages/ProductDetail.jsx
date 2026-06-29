@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FiStar, FiShoppingCart, FiShield, FiTruck, FiRefreshCw, FiMinus, FiPlus, FiArrowLeft } from 'react-icons/fi';
+import { FiStar, FiShoppingCart, FiShield, FiTruck, FiRefreshCw, FiMinus, FiPlus, FiArrowLeft, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -150,6 +150,16 @@ function ProductDetail() {
             {product.category || product.category_name}
           </span>
           <h1>{product.name}</h1>
+
+          {/* Verified & Trusted Seller badges */}
+          <div className="product-trust-badges">
+            <span className="product-trust-badge verified">
+              <FiCheck /> Verified
+            </span>
+            <span className="product-trust-badge trusted-seller">
+              <FiShield /> Trusted Seller
+            </span>
+          </div>
 
           <div className="product-detail-rating">
             <div className="star-rating">
