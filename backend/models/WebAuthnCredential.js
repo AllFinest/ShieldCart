@@ -57,12 +57,18 @@ async function findByCredentialId(credentialId) {
 }
 
 async function create({ userId, credentialId, publicKey, counter = 0, deviceType = null }) {
+  // @simplewebauthn/server returns publicKey as a Uint8Array (binary).
+  // The public_key column is TEXT, so it must be base64-encoded before storage.
+  const publicKeyB64 = Buffer.isBuffer(publicKey) || publicKey instanceof Uint8Array
+    ? Buffer.from(publicKey).toString('base64')
+    : publicKey;
+
   if (useMemory) {
     const record = {
       id: memoryId++,
       user_id: userId,
       credential_id: credentialId,
-      public_key: publicKey,
+      public_key: publicKeyB64,
       counter,
       device_type: deviceType,
       created_at: new Date(),
@@ -74,14 +80,14 @@ async function create({ userId, credentialId, publicKey, counter = 0, deviceType
   const [result] = await pool.execute(
     `INSERT INTO webauthn_credentials (user_id, credential_id, public_key, counter, device_type)
      VALUES (?, ?, ?, ?, ?)`,
-    [userId, credentialId, publicKey, counter, deviceType]
+    [userId, credentialId, publicKeyB64, counter, deviceType]
   );
 
   return {
     id: result.insertId,
     user_id: userId,
     credential_id: credentialId,
-    public_key: publicKey,
+    public_key: publicKeyB64,
     counter,
     device_type: deviceType,
   };

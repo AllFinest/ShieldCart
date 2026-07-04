@@ -23,6 +23,10 @@ export default defineConfig({
   server: {
     port: 5173,
     https: httpsConfig,
+    // Allow ngrok (and any) tunnel hostnames to reach the Vite dev server.
+    // Without this, Vite rejects requests from unrecognized hostnames,
+    // which surfaces to ngrok as a broken/incomplete response (ERR_NGROK_3004).
+    allowedHosts: true,
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:5000',

@@ -377,7 +377,7 @@ router.post('/login-verify', async (req, res) => {
           expectedRPID: webauthnConfig.rpID,
           credential: {
             id: credential.credential_id,
-            publicKey: credential.public_key,
+            publicKey: Buffer.from(credential.public_key, 'base64'),
             counter: credential.counter || 0,
           },
           requireUserVerification: false,
